@@ -39,8 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="BaseService.cs" />
+    <Compile Include="BaseServiceExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YiFramework.Core\YiFramework.Core.csproj">
+      <Project>{42196fe9-bf41-49e5-87eb-7b7dfbb2687c}</Project>
+      <Name>YiFramework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YiFramework.DBModel\YiFramework.DBModel.csproj">
+      <Project>{e92e3e8e-25ab-4055-83ab-9ced27eafe55}</Project>
+      <Name>YiFramework.DBModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YiFramework.ViewModel\YiFramework.ViewModel.csproj">
+      <Project>{25e5a2e9-0eee-47ef-adff-fd3cbc6726fc}</Project>
+      <Name>YiFramework.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
