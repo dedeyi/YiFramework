@@ -4,7 +4,6 @@ using System.Xml;
 
 namespace YiFramework.Core
 {
-
     /// <summary>
     /// 操作基础平台base.config配置文件的帮助类
     /// </summary>

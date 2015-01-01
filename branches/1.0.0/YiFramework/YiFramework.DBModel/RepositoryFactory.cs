@@ -26,7 +26,7 @@ namespace YiFramework.DBModel
         /// <typeparam name="TContext"></typeparam>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public IRepository<TEntity> GetRepository<TContext, TEntity>()
+        private IRepository<TEntity> GetRepository<TContext, TEntity>()
             where TContext : ObjectContext, new()
             where TEntity : EntityObject
         {

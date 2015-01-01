@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections;
-using System.Data.Objects;
-using System.Web;
+using System.Diagnostics;
 
 namespace YiFramework.Core
 {
     /// <summary>
     /// Author:caoyi
-    /// EF上下文管理
+    /// 数据上下文管理
     /// </summary>
     public class ContextManager
     {
         private const string suffix = "_TContext2014";
+        private const string contextKeys = "ContextKeys";
         /// <summary>
         /// Author:caoyi
         /// 在一个请求上下文中创建一次EF上下文实例
@@ -23,19 +22,14 @@ namespace YiFramework.Core
             : class,IDisposable, new()
         {
             string key = typeof(TContext).ToString() + suffix;
-            var httpContext = HttpContext.Current;
-            if (httpContext == null)
-            {
-                return new TContext();
-                //throw new Exception("不存在HttpContext对象，无法完成上下文存储！"); 
-            }
 
-            var item = httpContext.Items[key] as TContext;
+            var item = ContextStorage.Get<TContext>(key);
             if (item == null)
             {
                 var t = new TContext();
-                // Debug.WriteLine("EF创建时间（" + DateTime.Now.Ticks + "），HashCode（" + t.GetHashCode() + "）");
-                httpContext.Items[key] = t;
+                Debug.WriteLine("数据上下文创建【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
+                ContextStorage.Add(key, t);
+                addContextKey(key);
                 return t;
             }
             return item;
@@ -47,25 +41,60 @@ namespace YiFramework.Core
         /// </summary>
         public static void Dispose()
         {
-            var httpContex = HttpContext.Current;
-            IDictionary items = httpContex.Items;
-            if (items == null || items.Count == 0 || items.Keys.Count == 0)
+            string[] allKeys = getContextKeys();
+            if (allKeys != null && allKeys.Length > 0) 
             {
-                return;
-            }
-
-            foreach (var k in items.Keys)
-            {
-                if (k.ToString().IndexOf(suffix) > -1)
+                foreach (string key in allKeys)
                 {
-                    var c = httpContex.Items[k] as ObjectContext;
-                    if (c != null)
-                    {
-                        //  Debug.WriteLine("EF释放时间（"+DateTime.Now.Ticks+"），HashCode（"+c.GetHashCode()+"）");
-                        c.Dispose();
-                    }
+                    IDisposable t = ContextStorage.Get<IDisposable>(key);
+                    if (t != null) t.Dispose();
+                    Debug.WriteLine("数据上下文释放【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
                 }
             }
         }
+
+        /// <summary>
+        /// 是否制定类型上下文
+        /// </summary>
+        /// <param name="contextType"></param>
+        public static void Dispose(Type contextType) 
+        {
+            if (contextType == null) throw new ArgumentNullException("对象不能为空");
+            var tcontext = ContextStorage.Get<IDisposable>(contextType.ToString() + suffix);
+            if (tcontext != null) {
+                tcontext.Dispose();
+                Debug.WriteLine("数据上下文释放【time:" + DateTime.Now.Ticks + "），HashCode:" + tcontext.GetHashCode() + "】");
+            }
+        }
+
+        /// <summary>
+        /// 存储上下文key
+        /// </summary>
+        /// <param name="key"></param>
+        private static void addContextKey(string key) 
+        {
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException("key 不能为 空");
+            string keys = ContextStorage.Get<string>(contextKeys);
+            if (string.IsNullOrEmpty(keys))
+            {
+                keys = key;
+            }
+            else { keys += "," + key; }
+            ContextStorage.Set(contextKeys, keys);
+        }
+
+        /// <summary>
+        /// 获取上下文所有key
+        /// </summary>
+        private static string[] getContextKeys() 
+        {
+            string keys = ContextStorage.Get<string>(contextKeys);
+            if (!string.IsNullOrEmpty(keys))
+            {
+                return keys.Split(',');
+            }
+            return null;
+        }
+
     }
 }

@@ -38,7 +38,7 @@ namespace YiFramework.Core
         /// <summary>
         /// 保存当前上下文修改,只对当前数据访问对象所在的上下文进行SaveChange
         /// </summary>
-        public int SaveChange()
+        public virtual int SaveChange()
         {
             return Context.SaveChanges();
         }
@@ -50,7 +50,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public TEntity GetByKey(params object[] id)
+        public virtual TEntity GetByKey(params object[] id)
         {
             var count = 0;
             List<PropertyInfo> res_Primary = new List<PropertyInfo>();
@@ -78,7 +78,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="entity">各个联合主键必须有值</param>
         /// <returns></returns>
-        public TEntity GetByKeys(TEntity entity)
+        public virtual TEntity GetByKeys(TEntity entity)
         {
             List<string> keys = GetKeysProperties(typeof(TEntity));
             if (keys.Count < 1) { throw new Exception("不是联合主键对象"); }
@@ -98,7 +98,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="whereLamb">查询条件表达式</param>
         /// <returns>返回单个实体对象。不存在会返回null，查找到多个实体会抛出异常</returns>
-        public TEntity GetEntity(Expression<Func<TEntity, bool>> whereLamb)
+        public virtual TEntity GetEntity(Expression<Func<TEntity, bool>> whereLamb)
         {
             return Entities.SingleOrDefault(whereLamb);
         }
@@ -108,7 +108,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="whereLamb">查询条件表达式</param>
         /// <returns>查询结果集</returns>
-        public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> whereLamb)
+        public virtual IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> whereLamb)
         {
             return this.Entities.Where(whereLamb);
         }
@@ -117,7 +117,7 @@ namespace YiFramework.Core
         /// 获取所有数据集
         /// </summary>
         /// <returns>返回 数据表集合对象</returns>
-        public IQueryable<TEntity> GetList()
+        public virtual IQueryable<TEntity> GetList()
         {
             return Entities;
         }
@@ -126,7 +126,7 @@ namespace YiFramework.Core
         /// 获取实体表总记录条数
         /// </summary>
         /// <returns></returns>
-        public int GetTotal()
+        public virtual int GetTotal()
         {
             return Entities.Count();
         }
@@ -136,7 +136,7 @@ namespace YiFramework.Core
         /// <param name="whereLamb">查询条件表达式</param>
         /// </summary>
         /// <returns></returns>
-        public int GetTotal(Expression<Func<TEntity, bool>> whereLamb)
+        public virtual int GetTotal(Expression<Func<TEntity, bool>> whereLamb)
         {
             return Entities.Count(whereLamb);
         }
@@ -150,7 +150,7 @@ namespace YiFramework.Core
         /// <param name="isASC">是否ASC排序</param>
         /// <param name="pagetion"></param>
         /// <returns>排序结果集</returns>
-        public IQueryable<TEntity> GetList<orderType>(Expression<Func<TEntity, bool>> whereLamb, Expression<Func<TEntity, orderType>> orderName, bool isASC, EasyuiPagetion pagetion)
+        public virtual IQueryable<TEntity> GetList<orderType>(Expression<Func<TEntity, bool>> whereLamb, Expression<Func<TEntity, orderType>> orderName, bool isASC, Pagetion pagetion)
         {
             pagetion.total = GetTotal(whereLamb);
             if (isASC)
@@ -179,7 +179,7 @@ namespace YiFramework.Core
         /// <param name="saveChange">是否保存当前上下文状态</param>
         /// </summary>
         /// <param name="entity">如果saveChange 是true,返回保存成功状态，否则返回true</param>
-        public bool Add(TEntity entity, bool saveChange)
+        public virtual bool Add(TEntity entity, bool saveChange)
         {
             if (entity == null) throw new ArgumentNullException();
             Entities.AddObject(entity);
@@ -197,7 +197,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="entity">待修改的实体对象</param>
         /// <param name="saveChange">是否保存当前上下文状态</param>
-        public bool Update(TEntity entity, bool saveChange)
+        public virtual bool Update(TEntity entity, bool saveChange)
         {
             if (entity == null) throw new ArgumentNullException();
             if (entity.EntityKey == null) throw new Exception("更新的实体对象必须存在于上下文中，不能自己构造的！");
@@ -214,7 +214,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="entity">待删除的实体对象</param>
         /// <param name="saveChange">是否保存当前上下文状态</param>
-        public bool Delete(TEntity entity, bool saveChange)
+        public virtual bool Delete(TEntity entity, bool saveChange)
         {
             if (entity == null) throw new ArgumentNullException();
             if (entity.EntityKey == null) throw new Exception("删除的实体对象必须存在于上下文中，不能自己构造的！");
@@ -229,7 +229,7 @@ namespace YiFramework.Core
         /// <param name="whereLamb"></param>
         /// <param name="saveChange"></param>
         /// <returns></returns>
-        public bool Delete(Expression<Func<TEntity, bool>> whereLamb, bool saveChange)
+        public virtual bool Delete(Expression<Func<TEntity, bool>> whereLamb, bool saveChange)
         {
             if (whereLamb == null) throw new ArgumentNullException();
             var items = Entities.Where(whereLamb);
@@ -251,7 +251,7 @@ namespace YiFramework.Core
         /// <param name="items"></param>
         /// <param name="saveChange"></param>
         /// <returns></returns>
-        public bool Delete(IEnumerable<TEntity> items, bool saveChange)
+        public virtual bool Delete(IEnumerable<TEntity> items, bool saveChange)
         {
             if (items != null)
             {
@@ -269,12 +269,12 @@ namespace YiFramework.Core
 
         #region 执行T-SQL
 
-        public ObjectResult<TEntity> ExecuteStoreQuery(string commandText, params Object[] para)
+        public virtual ObjectResult<TEntity> ExecuteStoreQuery(string commandText, params Object[] para)
         {
             return Context.ExecuteStoreQuery<TEntity>(commandText, para);
         }
 
-        public int ExecuteStoreCommand(string commandText, params Object[] para)
+        public virtual int ExecuteStoreCommand(string commandText, params Object[] para)
         {
             return Context.ExecuteStoreCommand(commandText, para);
         }
@@ -287,7 +287,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        public string GetKeyProperty(Type entityType)
+        public virtual string GetKeyProperty(Type entityType)
         {
             foreach (var prop in entityType.GetProperties())
             {
@@ -304,7 +304,7 @@ namespace YiFramework.Core
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        public List<string> GetKeysProperties(Type entityType)
+        public virtual List<string> GetKeysProperties(Type entityType)
         {
             List<string> keys = new List<string>();
             foreach (var prop in entityType.GetProperties())
@@ -316,6 +316,5 @@ namespace YiFramework.Core
             }
             return keys;
         }
-
     }
 }

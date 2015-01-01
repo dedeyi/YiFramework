@@ -1,7 +1,7 @@
 ﻿
 namespace YiFramework.Core
 {
-   public class EasyuiPagetion
+   public class Pagetion
     {
        /// <summary>
        /// 每一页记录条数

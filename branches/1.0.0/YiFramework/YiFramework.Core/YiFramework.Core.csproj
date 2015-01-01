@@ -44,24 +44,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\CacheFactory.cs" />
-    <Compile Include="Cache\HttpCache.cs" />
-    <Compile Include="Cache\ICacheStorage.cs" />
-    <Compile Include="Cache\RuntimeCache.cs" />
+    <Compile Include="Expression\DynamicLinqExpressions.cs" />
+    <Compile Include="Expression\IEnumerableExtend.cs" />
+    <Compile Include="Model\CommonFields.cs" />
+    <Compile Include="Repository\ContextStorage.cs" />
+    <Compile Include="WebTool\Cache\CacheFactory.cs" />
+    <Compile Include="WebTool\Cache\HttpCache.cs" />
+    <Compile Include="WebTool\Cache\ICacheStorage.cs" />
+    <Compile Include="WebTool\Cache\RuntimeCache.cs" />
     <Compile Include="Config\BaseConfig.cs" />
     <Compile Include="Model\AjaxReturn.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Model\DataCheckField.cs" />
-    <Compile Include="Model\easyui\EasyuiGrid.cs" />
-    <Compile Include="Model\easyui\EasyuiPagetion.cs" />
-    <Compile Include="Model\easyui\EasyuiTree.cs" />
-    <Compile Include="Model\NameID.cs" />
+    <Compile Include="Model\UIModel\EasyuiTree.cs" />
+    <Compile Include="Model\UIModel\Grid.cs" />
+    <Compile Include="Model\UIModel\Pagetion.cs" />
+    <Compile Include="Model\UIModel\Tree.cs" />
+    <Compile Include="Model\KV.cs" />
     <Compile Include="Model\SearchVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\BaseRepository.cs" />
     <Compile Include="Repository\ContextManager.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="WebTool\SessionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

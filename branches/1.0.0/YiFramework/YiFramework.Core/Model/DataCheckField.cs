@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace YiFramework.Core
 {
+    /// <summary>
+    /// 数据权限验证字段
+    /// </summary>
     public class DataCheckField
     {
         public DataCheckField()

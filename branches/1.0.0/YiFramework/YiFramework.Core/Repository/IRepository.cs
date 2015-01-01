@@ -62,7 +62,7 @@ namespace YiFramework.Core
         /// <param name="isASC">是否是ASC排序</param>
         /// <param name="pagetion">分页对象</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetList<TO>(Expression<Func<TEntity, bool>> whereLamb, Expression<Func<TEntity, TO>> orderName, bool isASC, EasyuiPagetion pagetion);
+        IQueryable<TEntity> GetList<TO>(Expression<Func<TEntity, bool>> whereLamb, Expression<Func<TEntity, TO>> orderName, bool isASC, Pagetion pagetion);
 
         /// <summary>
         /// 获取总记录条数
