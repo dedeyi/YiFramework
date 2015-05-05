@@ -16,7 +16,7 @@ namespace YiFramework.Core
     /// </summary>
     /// <typeparam name="TContext">数据库上下文</typeparam>
     /// <typeparam name="TEntity">数据库表对象</typeparam>
-    public class BaseRepository<TContext, TEntity> : IRepository<TEntity>
+    public class ObjectContextRepository<TContext, TEntity> : IRepository<TEntity>
         where TContext : ObjectContext, new()
         where TEntity : EntityObject
     {
@@ -30,7 +30,7 @@ namespace YiFramework.Core
         /// </summary>
         protected readonly ObjectSet<TEntity> Entities;
 
-        public BaseRepository()
+        public ObjectContextRepository()
         {
             Context = ContextManager.Instance<TContext>();
             Entities = this.Context.CreateObjectSet<TEntity>();
@@ -86,7 +86,7 @@ namespace YiFramework.Core
             Type entityType = typeof(TEntity);
             foreach (var key in keys)
             {
-                object val = entityType.GetProperty(key).GetValue(entity);
+                object val = entityType.GetProperty(key).GetValue(entity, null);
                 kv.Add(new KeyValuePair<string, object>(key, val));
             }
             EntityKey entityKey = new EntityKey(Context.DefaultContainerName + "." + typeof(TEntity).Name, kv);
@@ -268,13 +268,12 @@ namespace YiFramework.Core
         #endregion
 
         #region 执行T-SQL
-
-        public virtual ObjectResult<TEntity> ExecuteStoreQuery(string commandText, params Object[] para)
+        public virtual IEnumerable<TEntity> SqlQuery(string commandText, params Object[] para)
         {
             return Context.ExecuteStoreQuery<TEntity>(commandText, para);
         }
 
-        public virtual int ExecuteStoreCommand(string commandText, params Object[] para)
+        public virtual int ExecuteSqlCommand(string commandText, params Object[] para)
         {
             return Context.ExecuteStoreCommand(commandText, para);
         }

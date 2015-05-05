@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 namespace YiFramework.Core
 {
     /// <summary>
-    /// 封装 Ajax 请求返回信息实体
+    /// 操作结果实体
     /// </summary>
-    public partial class AjaxReturn
+    public partial class OperateResult
     {
-        public AjaxReturn()
+        public OperateResult()
         {
             success = true;
             message = "操作成功";

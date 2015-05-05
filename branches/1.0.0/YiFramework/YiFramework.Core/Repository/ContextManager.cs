@@ -9,7 +9,7 @@ namespace YiFramework.Core
     /// </summary>
     public class ContextManager
     {
-        private const string suffix = "_TContext2014";
+        private const string suffix = "_TContext2015";
         private const string contextKeys = "ContextKeys";
         /// <summary>
         /// Author:caoyi
@@ -27,7 +27,7 @@ namespace YiFramework.Core
             if (item == null)
             {
                 var t = new TContext();
-                Debug.WriteLine("数据上下文创建【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
+                //Debug.WriteLine("数据上下文创建【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
                 ContextStorage.Add(key, t);
                 addContextKey(key);
                 return t;
@@ -48,7 +48,7 @@ namespace YiFramework.Core
                 {
                     IDisposable t = ContextStorage.Get<IDisposable>(key);
                     if (t != null) t.Dispose();
-                    Debug.WriteLine("数据上下文释放【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
+                   // Debug.WriteLine("数据上下文释放【time:" + DateTime.Now.Ticks + "），HashCode:" + t.GetHashCode() + "】");
                 }
             }
         }

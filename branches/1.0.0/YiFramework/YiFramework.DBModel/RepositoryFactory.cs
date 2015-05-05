@@ -30,7 +30,7 @@ namespace YiFramework.DBModel
             where TContext : ObjectContext, new()
             where TEntity : EntityObject
         {
-            return new BaseRepository<TContext, TEntity>();
+            return new ObjectContextRepository<TContext, TEntity>();
         }
     }
 }

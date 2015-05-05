@@ -20,19 +20,19 @@ namespace YiFramework.Service
        /// <summary>
        /// 当前登录用户
        /// </summary>
-       private CurrentUser currentUser;
+       private SessionUser currentUser;
 
        /// <summary>
        /// 获取当前登录回话中的用户
        /// </summary>
        /// <returns></returns>
-       public CurrentUser CurrentUser
+       public SessionUser CurrentUser
        {
            get
            {
                if (currentUser == null)
                {
-                   currentUser = SessionManager.Get<CurrentUser>(SessionManager.CurrentKey);
+                   currentUser = SessionManager.Get<SessionUser>(SessionManager.CurrentKey);
                }
                return currentUser;
            }
@@ -65,21 +65,21 @@ namespace YiFramework.Service
        {
            BaseFields = new CommonFields();
            initSoftDelete();
-           SetRepository();
-           SetEntityName();
+           this.Repository = GetRepository();
+           this.EntityName=GetEntityName();
        }
 
        #region 抽象方法
 
        /// <summary>
-       /// 设置仓储属性
+       /// 获取仓储实例
        /// </summary>
        /// <param name="repository"></param>
-       public abstract void SetRepository();
+       public abstract IRepository<TEntity> GetRepository();
        /// <summary>
-       /// 设置实体名称
+       /// 获取实体名称
        /// </summary>
-       public abstract void SetEntityName();
+       public abstract string GetEntityName();
 
        #endregion
 
@@ -217,13 +217,13 @@ namespace YiFramework.Service
        /// <param name="entity">待添加的实体对象</param>
        /// <param name="user">回话中的用户</param>
        /// <returns></returns>
-       public virtual AjaxReturn Add(TEntity entity)
+       public virtual OperateResult Add(TEntity entity)
        {
            if (entity == null) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
-               CurrentUser user = CurrentUser;
+               SessionUser user = CurrentUser;
                AttachCommonFieldsForAdd(entity, user);
                result.success = Repository.Add(entity, true);
                result.SetMessage("添加成功！", "添加失败！");
@@ -252,13 +252,13 @@ namespace YiFramework.Service
        /// <param name="entity"></param>
        /// <param name="user"></param>
        /// <returns></returns>
-       public virtual AjaxReturn Edit(TEntity entity)
+       public virtual OperateResult Edit(TEntity entity)
        {
            if (entity == null) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
-               CurrentUser user = CurrentUser;
+               SessionUser user = CurrentUser;
                TEntity m = Repository.GetByKeys(entity);
                if (IsSameTimeStamp(entity, m)) //如果并发冲突
                {
@@ -294,13 +294,13 @@ namespace YiFramework.Service
        /// <param name="editFields">需要编辑的属性数组</param>
        /// <param name="user"></param>
        /// <returns></returns>
-       public virtual AjaxReturn Edit(TEntity entity, string[] editFields)
+       public virtual OperateResult Edit(TEntity entity, string[] editFields)
        {
            if (entity == null) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
-               CurrentUser user = CurrentUser;
+               SessionUser user = CurrentUser;
                TEntity m = Repository.GetByKeys(entity);
                if (IsSameTimeStamp(entity, m))
                {
@@ -338,10 +338,10 @@ namespace YiFramework.Service
        /// </summary>
        /// <param name="entity">包括主键和时间戳字段的对象</param>
        /// <returns></returns>
-       public virtual AjaxReturn Delete(TEntity entity) 
+       public virtual OperateResult Delete(TEntity entity) 
        {
            if (entity == null) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
                var source = Repository.GetByKeys(entity);
@@ -385,10 +385,10 @@ namespace YiFramework.Service
        /// </summary>
        /// <param name="id"></param>
        /// <returns></returns>
-       public virtual AjaxReturn Delete(params object[] id)
+       public virtual OperateResult Delete(params object[] id)
        {
            if (id == null) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
                var entity = Repository.GetByKey(id);
@@ -424,10 +424,10 @@ namespace YiFramework.Service
        /// </summary>
        /// <param name="ids"></param>
        /// <returns></returns>
-       public virtual AjaxReturn DeleteByIDs(string ids)
+       public virtual OperateResult DeleteByIDs(string ids)
        {
            if (string.IsNullOrEmpty(ids)) throw new ArgumentNullException();
-           AjaxReturn result = new AjaxReturn();
+           OperateResult result = new OperateResult();
            try
            {
                string[] arrID = ids.Split(',');
@@ -500,7 +500,7 @@ namespace YiFramework.Service
        /// </summary>
        /// <param name="entity"></param>
        /// <param name="user"></param>
-       public void AttachCommonFieldsForAdd(TEntity entity, CurrentUser user)
+       public void AttachCommonFieldsForAdd(TEntity entity, SessionUser user)
        {
            Type entityType=typeof(TEntity);
            //设置主键

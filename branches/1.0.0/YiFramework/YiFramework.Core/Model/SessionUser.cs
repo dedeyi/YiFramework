@@ -3,7 +3,7 @@
     /// <summary>
     /// 当前登录用户信息
     /// </summary>
-    public class CurrentUser
+    public class SessionUser
     {
         /// <summary>
         /// 用户ID

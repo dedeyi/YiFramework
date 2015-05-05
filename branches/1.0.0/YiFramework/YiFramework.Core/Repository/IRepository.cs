@@ -36,8 +36,18 @@ namespace YiFramework.Core
         /// <returns></returns>
         bool Delete(TEntity entity, bool saveChange);
 
+        /// <summary>
+        /// 根据主键获取实体
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         TEntity GetByKey(params object[] id);
 
+       /// <summary>
+       /// 根据传入实体中主键获取完整的实体
+       /// </summary>
+       /// <param name="entity"></param>
+       /// <returns></returns>
         TEntity GetByKeys(TEntity entity);
 
         /// <summary>
